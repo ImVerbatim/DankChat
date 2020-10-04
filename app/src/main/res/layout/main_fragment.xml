@@ -68,6 +68,16 @@
                         app:tabMode="auto" />
                 </com.google.android.material.appbar.AppBarLayout>
 
+                <com.google.android.exoplayer2.ui.PlayerView
+                    android:id="@+id/simpleExoPlayerView"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/appbar_layout"
+                    app:layout_constraintDimensionRatio="H,16:9"
+                    android:visibility="@{vm.shouldShowVideoPlayer ? View.VISIBLE : View.GONE}"
+                    tools:visibility="visible"/>
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/chat_viewpager"
@@ -77,7 +87,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/appbar_layout" />
+                    app:layout_constraintTop_toBottomOf="@id/simpleExoPlayerView" />
 
                 <TextView
                     android:id="@+id/add_channels_text"

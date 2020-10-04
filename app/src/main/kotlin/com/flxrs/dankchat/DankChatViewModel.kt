@@ -6,6 +6,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.flxrs.dankchat.chat.menu.EmoteMenuTab
 import com.flxrs.dankchat.chat.suggestion.Suggestion
+import com.flxrs.dankchat.player.api.M3U8Fetch
 import com.flxrs.dankchat.service.ChatRepository
 import com.flxrs.dankchat.service.DataRepository
 import com.flxrs.dankchat.service.api.TwitchApi
@@ -17,6 +18,7 @@ import com.flxrs.dankchat.utils.SingleLiveEvent
 import com.flxrs.dankchat.utils.extensions.*
 import kotlinx.coroutines.*
 import java.io.File
+import kotlin.system.measureTimeMillis
 
 class DankChatViewModel @ViewModelInject constructor(
     @Assisted savedStateHandle: SavedStateHandle,
@@ -24,7 +26,7 @@ class DankChatViewModel @ViewModelInject constructor(
     private val dataRepository: DataRepository,
     private val twitchApi: TwitchApi
 ) : ViewModel() {
-
+    private var urlFetch: M3U8Fetch = M3U8Fetch()
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, t ->
         Log.e(TAG, Log.getStackTraceString(t))
         _errorEvent.postValue(t)
@@ -98,6 +100,7 @@ class DankChatViewModel @ViewModelInject constructor(
 
     val inputEnabled = MutableLiveData(true)
     val appbarEnabled = MutableLiveData(true)
+    val playerEnabled = MutableLiveData(false)
     val whisperTabSelected = MutableLiveData(false)
     val mentionSheetOpen = MutableLiveData(false)
     val shouldShowViewPager = MediatorLiveData<Boolean>().apply {
@@ -106,6 +109,9 @@ class DankChatViewModel @ViewModelInject constructor(
     val shouldShowInput = MediatorLiveData<Boolean>().apply {
         addSource(inputEnabled) { value = it && shouldShowViewPager.value ?: false }
         addSource(shouldShowViewPager) { value = it && inputEnabled.value ?: true }
+    }
+    val shouldShowVideoPlayer = MediatorLiveData<Boolean>().apply {
+        addSource(playerEnabled) { value = it && shouldShowViewPager.value ?: false }
     }
     val showUploadProgress = MediatorLiveData<Boolean>().apply {
         addSource(_imageUploadedEvent) { value = it is ImageUploadState.Loading || _dataLoadingEvent.value is DataLoadingState.Loading }
@@ -375,6 +381,10 @@ class DankChatViewModel @ViewModelInject constructor(
         ) + channelList.map {
             launch(coroutineExceptionHandler) { dataRepository.loadChannelData(it, oAuth) }
         }
+    }
+
+    suspend fun findM3U8Stream(channel: String) = withContext(coroutineExceptionHandler)  {
+        urlFetch.getStreamM3U8(channel)
     }
 
     private fun buildBottomText(): String {

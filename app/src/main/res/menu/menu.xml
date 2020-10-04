@@ -87,4 +87,9 @@
         android:id="@+id/menu_settings"
         android:title="@string/settings"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_player"
+        android:title="@string/player"
+        app:showAsAction="never" />
 </menu>

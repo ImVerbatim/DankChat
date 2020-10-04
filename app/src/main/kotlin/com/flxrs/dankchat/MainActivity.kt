@@ -14,6 +14,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import com.flxrs.dankchat.chat.mention.MentionViewModel
+import com.flxrs.dankchat.player.PlayerResultHandler
 import com.flxrs.dankchat.preferences.*
 import com.flxrs.dankchat.service.NotificationService
 import com.flxrs.dankchat.utils.dialog.AddChannelDialogResultHandler
@@ -22,7 +23,7 @@ import com.flxrs.dankchat.utils.extensions.navigateSafe
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(R.layout.main_activity), AddChannelDialogResultHandler, MessageHistoryDisclaimerResultHandler, PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
+class MainActivity : AppCompatActivity(R.layout.main_activity), AddChannelDialogResultHandler, PlayerResultHandler, MessageHistoryDisclaimerResultHandler, PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
     private val channels = mutableListOf<String>()
     private val viewModel: DankChatViewModel by viewModels()
     private val mentionViewModel: MentionViewModel by viewModels()
@@ -105,6 +106,10 @@ class MainActivity : AppCompatActivity(R.layout.main_activity), AddChannelDialog
             fragment.addChannel(channel)
         }
         invalidateOptionsMenu()
+    }
+
+    override fun onPlayerResult() {
+        TODO("Not yet implemented")
     }
 
     override fun onDisclaimerResult(shouldLoadHistory: Boolean) {
