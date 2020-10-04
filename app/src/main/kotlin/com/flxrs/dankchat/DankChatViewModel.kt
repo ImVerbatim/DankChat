@@ -384,6 +384,7 @@ class DankChatViewModel @ViewModelInject constructor(
     }
 
     suspend fun findM3U8Stream(channel: String) = withContext(coroutineExceptionHandler)  {
+        // Fetch Stream
         urlFetch.getStreamM3U8(channel)
     }
 
