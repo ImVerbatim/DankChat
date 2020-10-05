@@ -70,6 +70,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.device_player_view.view.*
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -620,7 +621,6 @@ class MainFragment : Fragment() {
 
     private fun startVideoPlayer() {
         if(!this::dankPlayer.isInitialized) {
-
             dankPlayer = DankPlayer(binding.playerView, context as Context)
             dankPlayer.initPlayer()
         }
@@ -633,7 +633,7 @@ class MainFragment : Fragment() {
                 else {
                     val url: String? = it.urls["480p"]
                     if (url != null)
-                        dankPlayer.play(url)
+                        dankPlayer.play(url, channel)
                 }
             }
 

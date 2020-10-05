@@ -13,22 +13,18 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import java.util.*
 
-class DankPlayer: EventListener {
+class DankPlayer(playerView: DankPlayerView, private val context: Context) : EventListener, DankPlayerViewUI.OnFullScreenClickedListener, DankPlayerViewUI.OnCloseButtonClickedListener {
     private lateinit var mediaSource: HlsMediaSource
     private lateinit var mediaItem: MediaItem
     private lateinit var dataSourceFactory: DefaultDataSourceFactory
     private lateinit var player: SimpleExoPlayer
-    private val dankPlayerView: DankPlayerView
-    private val context : Context
+    private val dankPlayerView: DankPlayerView = playerView
 
     interface EventListener {
         fun onPlayClicked();
     }
 
-    constructor(playerView: DankPlayerView, context: Context) {
-        this.dankPlayerView = playerView
-        this.context = context
-
+    init {
         initPlayer()
     }
 
@@ -40,16 +36,38 @@ class DankPlayer: EventListener {
 
     }
 
-    fun play(url: String) {
+    fun play(url: String, channel: String) {
         dankPlayerView.visibility = View.VISIBLE
+        dankPlayerView.setTitle(channel)
+        addListeners()
         mediaItem = MediaItem.fromUri(url)
         mediaSource = HlsMediaSource.Factory(dataSourceFactory).createMediaSource(mediaItem)
         player.setMediaSource(mediaSource)
-        player.setPlayWhenReady(true);
+        player.playWhenReady = true;
         player.prepare()
+    }
+
+    private fun addListeners() {
+        dankPlayerView.addCloseButtonClickedListener(this)
+        dankPlayerView.addFullScreenButtonClickedListener(this)
+    }
+
+    private fun removeAsListeners() {
+        dankPlayerView.removeCloseButtonClickedListener(this)
+        dankPlayerView.removeFullScreenButtonClickedListener(this)
     }
 
     override fun onPlayerError(error: ExoPlaybackException) {
         super.onPlayerError(error)
+    }
+
+    override fun onFullScreenClicked(isFullScreen: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onCloseButtonClicked() {
+        player.release()
+        removeAsListeners()
+        dankPlayerView.visibility = View.GONE
     }
 }
