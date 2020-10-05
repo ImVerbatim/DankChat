@@ -1,12 +1,9 @@
 package com.flxrs.dankchat.player.api
 
-import com.flxrs.dankchat.service.api.dto.EmoteDtos
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.*
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.io.IOException
 import javax.inject.Inject
 
 class M3U8Fetch @Inject constructor() {
@@ -18,7 +15,7 @@ class M3U8Fetch @Inject constructor() {
         .create(HLSStreamFetchService::class.java)
 
     suspend fun getStreamM3U8(channel: String): HLSDtos.StreamUrls? = withContext(Dispatchers.IO) {
-        val response = service.getM3U8("$M3U8_FETCH_URL" + "streamapi.py?url=twitch.tv%2F$channel")
+        val response = service.getM3U8(M3U8_FETCH_URL + "streamapi.py?url=twitch.tv%2F$channel")
         response.bodyOrNull
     }
 

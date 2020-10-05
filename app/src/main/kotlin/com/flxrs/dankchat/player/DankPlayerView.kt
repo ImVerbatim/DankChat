@@ -16,8 +16,8 @@ open class DankPlayerView(context: Context, attrs: AttributeSet?) : PlayerView(c
     private var pauseButton: ImageButton?
     private var playButton: ImageButton?
     private var playerView: DankPlayerView?
-    private var fullScreenListeners: HashSet<DankPlayerViewUI.OnFullScreenClickedListener> = HashSet<DankPlayerViewUI.OnFullScreenClickedListener>()
-    private var closeButtonListener: HashSet<DankPlayerViewUI.OnCloseButtonClickedListener> = HashSet<DankPlayerViewUI.OnCloseButtonClickedListener>()
+    private var fullScreenListeners: HashSet<DankPlayerViewUI.OnFullScreenClickedListener> = HashSet()
+    private var closeButtonListener: HashSet<DankPlayerViewUI.OnCloseButtonClickedListener> = HashSet()
 
     init {
         this.showController()
@@ -48,11 +48,11 @@ open class DankPlayerView(context: Context, attrs: AttributeSet?) : PlayerView(c
     }
 
     override fun removeCloseButtonClickedListener(listener: DankPlayerViewUI.OnCloseButtonClickedListener) {
-        closeButtonListener?.remove(listener)
+        closeButtonListener.remove(listener)
     }
 
     override fun removeFullScreenButtonClickedListener(listener: DankPlayerViewUI.OnFullScreenClickedListener) {
-        fullScreenListeners?.remove(listener)
+        fullScreenListeners.remove(listener)
     }
 
 

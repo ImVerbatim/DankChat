@@ -57,10 +57,6 @@ class DankPlayer(playerView: DankPlayerView, private val context: Context) : Eve
         dankPlayerView.removeFullScreenButtonClickedListener(this)
     }
 
-    override fun onPlayerError(error: ExoPlaybackException) {
-        super.onPlayerError(error)
-    }
-
     override fun onFullScreenClicked(isFullScreen: Boolean) {
         TODO("Not yet implemented")
     }
