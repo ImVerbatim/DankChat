@@ -1,14 +1,21 @@
 package com.flxrs.dankchat.player
 
+import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.widget.ImageButton
+import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import com.flxrs.dankchat.R
 import com.google.android.exoplayer2.ui.PlayerView
 import kotlinx.android.synthetic.main.device_player_view.view.*
 import kotlinx.android.synthetic.main.main_fragment.view.*
 
 open class DankPlayerView(context: Context, attrs: AttributeSet?) : PlayerView(context, attrs), DankPlayerViewUI {
+    private var bufferingIcon: ProgressBar?
     private val isFullScreen: Boolean = false
     private var titleView: TextView?
     private var closeButton: ImageButton?
@@ -26,6 +33,7 @@ open class DankPlayerView(context: Context, attrs: AttributeSet?) : PlayerView(c
         this.playButton = player_view.exo_play
         this.pauseButton = player_view.exo_pause
         this.fullScreenButton = player_view.exo_fullscreen
+        this.bufferingIcon = player_view.progress_bar
         fullScreenButton?.setOnClickListener {
             for(x in fullScreenListeners) x.onFullScreenClicked(!isFullScreen)
         }
@@ -53,6 +61,10 @@ open class DankPlayerView(context: Context, attrs: AttributeSet?) : PlayerView(c
 
     override fun removeFullScreenButtonClickedListener(listener: DankPlayerViewUI.OnFullScreenClickedListener) {
         fullScreenListeners.remove(listener)
+    }
+
+    fun setShouldShowBuffer(b: Boolean) {
+        bufferingIcon?.isVisible = b
     }
 
 

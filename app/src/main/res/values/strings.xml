@@ -171,6 +171,8 @@
     <string name="preference_scrollback_length_key" translatable="false">scrollback_length_key</string>
     <string name="preference_scrollback_length_title">Message scrollback length</string>
     <string name="player">Video Player</string>
+    <string name="dank_image_overlay">Dank Image Overlay</string>
+    <string name="player_close_button">Player Close Button</string>
 
     <plurals name="viewers">
         <item quantity="one">Live with %d viewer</item>
