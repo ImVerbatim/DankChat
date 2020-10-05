@@ -45,6 +45,7 @@
     <string name="notification_mention">%1$s just mentioned you in #%2$s</string>
     <string name="notification_notify_mention">You were mentioned in #%1$s</string>
     <string name="snackbar_login">Logging in as %1$s</string>
+    <string name="snackbar_playback_failed">Playback Failed. Failed to fetch stream for channel: %1$s</string>
     <string name="snackbar_login_failed">Failed to login</string>
     <string name="snackbar_image_uploaded">Copied: %1$s</string>
     <string name="snackbar_upload_failed">Error during upload</string>

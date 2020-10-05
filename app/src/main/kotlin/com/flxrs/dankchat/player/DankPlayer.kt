@@ -31,11 +31,11 @@ class DankPlayer {
     }
 
     fun play(url: String) {
+        dankPlayerView.visibility = View.VISIBLE
         mediaItem = MediaItem.fromUri(url)
         mediaSource = HlsMediaSource.Factory(dataSourceFactory).createMediaSource(mediaItem)
         player.setMediaSource(mediaSource)
         player.setPlayWhenReady(true);
         player.prepare()
-        dankPlayerView.visibility = View.VISIBLE
     }
 }

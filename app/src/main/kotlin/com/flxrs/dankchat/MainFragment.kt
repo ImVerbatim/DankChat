@@ -627,9 +627,13 @@ class MainFragment : Fragment() {
         val channel: String = viewModel.activeChannel.value ?: return
         lifecycleScope.launchWhenStarted {
             viewModel.findM3U8Stream(channel).let {
-                val url: String? = it?.urls?.get("720p60")
-                if (url != null) {
-                    dankPlayer.play(url)
+                val success: Boolean? = it?.isSuccess
+                if (!success!!)
+                    showSnackbar(getString(R.string.snackbar_playback_failed, channel))
+                else {
+                    val url: String? = it.urls["720p60"]
+                    if (url != null)
+                        dankPlayer.play(url)
                 }
             }
 
