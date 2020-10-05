@@ -14,6 +14,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import com.flxrs.dankchat.chat.mention.MentionViewModel
+import com.flxrs.dankchat.player.DankPlayer
 import com.flxrs.dankchat.preferences.*
 import com.flxrs.dankchat.service.NotificationService
 import com.flxrs.dankchat.utils.dialog.AddChannelDialogResultHandler
@@ -22,7 +23,7 @@ import com.flxrs.dankchat.utils.extensions.navigateSafe
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(R.layout.main_activity), AddChannelDialogResultHandler, MessageHistoryDisclaimerResultHandler, PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
+class MainActivity : AppCompatActivity(R.layout.main_activity), AddChannelDialogResultHandler, MessageHistoryDisclaimerResultHandler, PreferenceFragmentCompat.OnPreferenceStartFragmentCallback, DankPlayer.EventListener {
     private val channels = mutableListOf<String>()
     private val viewModel: DankChatViewModel by viewModels()
     private val mentionViewModel: MentionViewModel by viewModels()
@@ -184,5 +185,9 @@ class MainActivity : AppCompatActivity(R.layout.main_activity), AddChannelDialog
         private val TAG = MainActivity::class.java.simpleName
         const val SHUTDOWN_REQUEST_FILTER = "shutdown_request_filter"
         const val OPEN_CHANNEL_KEY = "open_channel"
+    }
+
+    override fun onPlayClicked() {
+        TODO("Not yet implemented")
     }
 }
