@@ -18,23 +18,10 @@ class M3U8Fetch @Inject constructor() {
         .create(HLSStreamFetchService::class.java)
 
     suspend fun getStreamM3U8(channel: String): HLSDtos.StreamUrls? = withContext(Dispatchers.IO) {
+        val bruh: String = channel
         val response = service.getM3U8("$M3U8_FETCH_URL" + "streamapi.py?url=twitch.tv%2F$channel")
         response.bodyOrNull
     }
-
-//    private val client = OkHttpClient()
-//
-//    fun getChannelStream(channel: String) {
-//        val param: String = "?url=twitch.tv%2F$channel";
-//        val request = Request.Builder()
-//            .url("$M3U8_FETCH_URL$param")
-//            .build()
-//
-//        client.newCall(request).enqueue(object : Callback {
-//            override fun onFailure(call: Call, e: IOException) {}
-//            override fun onResponse(call: Call, response: Response) = println(response.body?.string())
-//        })
-//    }
 
     companion object {
         const val M3U8_FETCH_URL = "https://www.pwn.sh/tools/"

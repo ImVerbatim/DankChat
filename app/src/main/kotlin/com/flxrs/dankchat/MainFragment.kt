@@ -44,6 +44,7 @@ import com.flxrs.dankchat.chat.suggestion.EmoteSuggestionsArrayAdapter
 import com.flxrs.dankchat.chat.suggestion.SpaceTokenizer
 import com.flxrs.dankchat.chat.suggestion.Suggestion
 import com.flxrs.dankchat.databinding.MainFragmentBinding
+import com.flxrs.dankchat.player.DankPlayer
 import com.flxrs.dankchat.player.api.M3U8Fetch
 import com.flxrs.dankchat.preferences.ChatSettingsFragment
 import com.flxrs.dankchat.preferences.DankChatPreferenceStore
@@ -78,6 +79,7 @@ import kotlin.math.roundToInt
 @AndroidEntryPoint
 class MainFragment : Fragment() {
 
+    private lateinit var dankPlayer: DankPlayer
     private val HLS_STATIC_URL = "https://video-weaver.fra05.hls.ttvnw.net/v1/playlist/CugDrmH3-oDAWkJPzIGkJezWeQ5QhQ5gF0ONrqxF1Y1KSpFBbA19reNf_1shd4DPg1TEu_AegEJNH4cSMapZHc5uJw1s8YbbmB4jbuiF843tFGOWoEN6PQLvldFyQDrh_hMnXlYOwDOWO3Uw3ctxNbAmzx4OFRzM6zrz58flVLg4wjQ3Y8xkNL5Jzq7DkzCIpWJQ2vDSM-o9LCYGnKT7PXPEtG1ze2ZFzUoOQlIMgHr6gbhgDWx5iZ6c4DB8G9yESml5ztDvftAOzpO3ZenMFhV9p3PoKRt5QCfNq0u6y0Td0UiZAFyybrhkmPQ_Tia8LLn571klf1xVv0FP_k9TK3ydA97arj2n75SIob3Eb8OTIZ-ZzAgPxVVjT1g2rLYqcoyz0k2_JIvRFtaHrUaj_qkVnj3L2O6vTea9obwm8I05go_aizNRHJ1ZNk7u8x45v66kmbbYWsx52cFcHgGu4Wab_ek9WGuixk8UAIU9aVO7NeykaODJ-DLHK3YYsAnakE8d0DgAj3zXQJrfbMdholaEYxnUTcyilX97OaAphWr9r-ZAwrmJZSQFGmZfOJBCM2FaFatRgHD5-rMehoIP44ADuOTOJV7WgzaNIjN3F9PZzlUtWh6H6R9LjhZ7imS2oThsxZzRlTJYWxQSEKEaoH7ULGWOlYyyASYZ_HkaDKfLyRGdpEpT-YwJ1g.m3u8"
     private lateinit var player: SimpleExoPlayer
     private val viewModel: DankChatViewModel by activityViewModels()
@@ -618,18 +620,18 @@ class MainFragment : Fragment() {
     }
 
     private fun startVideoPlayer() {
+        if(!this::dankPlayer.isInitialized) {
+            dankPlayer = DankPlayer(binding.simpleExoPlayerView, context as Context)
+            dankPlayer.initPlayer()
+        }
+        val channel: String = viewModel.activeChannel.value ?: return
         lifecycleScope.launchWhenStarted {
-            binding.simpleExoPlayerView.visibility = View.VISIBLE
-            player = SimpleExoPlayer.Builder(context as Context).build()
-            binding.simpleExoPlayerView.player = player
-            viewModel.activeChannel.value?.let { viewModel.findM3U8Stream(it).let {
-                val dataSourceFactory: DefaultDataSourceFactory = DefaultDataSourceFactory(context as Context)
-                val mediaItem: MediaItem = it?.urls?.get("1080p60")?.let { it1 -> MediaItem.fromUri(it1) }!!
-                val mediaSource: HlsMediaSource = HlsMediaSource.Factory(dataSourceFactory).createMediaSource(mediaItem)
-                player.setMediaSource(mediaSource)
-                player.setPlayWhenReady(true);
-                player.prepare()
-            }}
+            viewModel.findM3U8Stream(channel).let {
+                val url: String? = it?.urls?.get("720p60")
+                if (url != null) {
+                    dankPlayer.play(url)
+                }
+            }
 
         }
     }
