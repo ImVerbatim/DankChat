@@ -5,21 +5,16 @@ import android.view.View
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.Player.EventListener
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.ui.PlayerControlView
-import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import java.util.*
 
-class DankPlayer(playerView: DankPlayerView, private val context: Context) : EventListener, DankPlayerViewUI.OnFullScreenClickedListener, DankPlayerViewUI.OnCloseButtonClickedListener {
+class DankPlayer(playerView: DankPlayerView, private val context: Context) : EventListener, DankPlayerViewUI.OnFullScreenClickedListener, DankPlayerViewUI.OnCloseButtonClickedListener, DankPlayerViewUI.OnPlayClickedListener {
+    private lateinit var channelName: String
+    private lateinit var streamUrl: String
     private lateinit var mediaSource: HlsMediaSource
     private lateinit var mediaItem: MediaItem
     private lateinit var dataSourceFactory: DefaultDataSourceFactory
     private lateinit var player: SimpleExoPlayer
     private val dankPlayerView: DankPlayerView = playerView
-
-    interface EventListener {
-        fun onPlayClicked()
-    }
 
     init {
         initPlayer()
@@ -34,6 +29,8 @@ class DankPlayer(playerView: DankPlayerView, private val context: Context) : Eve
     }
 
     fun play(url: String, channel: String) {
+        streamUrl = url
+        channelName = channel
         dankPlayerView.visibility = View.VISIBLE
         dankPlayerView.setTitle(channel)
         addListeners()
@@ -47,15 +44,17 @@ class DankPlayer(playerView: DankPlayerView, private val context: Context) : Eve
     private fun addListeners() {
         dankPlayerView.addCloseButtonClickedListener(this)
         dankPlayerView.addFullScreenButtonClickedListener(this)
+        dankPlayerView.addPlayButtonClickedListener(this)
     }
 
     private fun removeAsListeners() {
         dankPlayerView.removeCloseButtonClickedListener(this)
         dankPlayerView.removeFullScreenButtonClickedListener(this)
+        dankPlayerView.removePlayButtonClickedListener(this)
     }
 
     override fun onFullScreenClicked(isFullScreen: Boolean) {
-        TODO("Not yet implemented")
+
     }
 
     override fun onCloseButtonClicked() {
@@ -83,5 +82,10 @@ class DankPlayer(playerView: DankPlayerView, private val context: Context) : Eve
                 // Unknown state
             }
         }
+    }
+
+    override fun onPlayClickedListener() {
+        player.stop()
+        play(this.streamUrl, this.channelName)
     }
 }
