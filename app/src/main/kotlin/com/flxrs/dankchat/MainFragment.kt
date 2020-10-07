@@ -685,13 +685,7 @@ class MainFragment : Fragment(), DankPlayerViewUI.OnFullScreenClickedListener, D
                         dankPlayer.play(url, channel)
 
                     if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                        binding.appbarLayout.visibility = View.GONE
-                        binding.inputLayout.visibility = View.GONE
-                        binding.emoteMenuBottomSheet.visibility = View.GONE
-                        val params = binding.playerView.layoutParams as ConstraintLayout.LayoutParams
-                        params.width = ViewGroup.LayoutParams.MATCH_PARENT
-                        params.height = ViewGroup.LayoutParams.MATCH_PARENT
-                        binding.playerView.layoutParams = params
+                        setPlayerLandscapeConstraints()
                     }
                 }
             }
