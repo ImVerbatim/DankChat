@@ -4,6 +4,7 @@ import android.content.*
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -36,6 +37,9 @@ class MainActivity : AppCompatActivity(R.layout.main_activity), AddChannelDialog
     private val twitchServiceConnection = TwitchServiceConnection()
     var isBound = false
     var channelToOpen = ""
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        setFullscreenParams();
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -179,6 +183,15 @@ class MainActivity : AppCompatActivity(R.layout.main_activity), AddChannelDialog
             notificationService = null
             isBound = false
         }
+    }
+
+    private fun setFullscreenParams() {
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                // Set the content to appear under the system bars so that the
+                // content doesn't resize when the system bars hide and show.
+                // Hide the nav bar and status bar
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN)
     }
 
     companion object {

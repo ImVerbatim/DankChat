@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:text="@string/preference_streaminfo_title"
         android:textColor="@color/exo_white"
+        android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -40,7 +41,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/exo_controls_fullscreen_enter_description"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintEnd_toEndOf="@id/player_close_button"
         app:layout_constraintBottom_toBottomOf="parent"
         style="@style/ExoStyledControls.Button.Bottom.FullScreen" />
 
@@ -50,7 +52,7 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/exo_controls_fullscreen_enter_description"
         app:layout_constraintEnd_toStartOf="@id/exo_fullscreen"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/exo_fullscreen"
         style="@style/ExoStyledControls.Button.Bottom.Settings" />
 
 
@@ -67,10 +69,10 @@
         android:id="@id/exo_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="parent">
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -81,13 +83,13 @@
     </FrameLayout>
 
     <ImageView android:id="@+id/dank_image"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/player_settings"
         app:layout_constraintTop_toTopOf="@id/player_settings"
         android:background="@android:color/transparent"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:alpha="0.5"
         android:src="@mipmap/ic_launcher"
         android:contentDescription="@string/dank_image_overlay"/>
