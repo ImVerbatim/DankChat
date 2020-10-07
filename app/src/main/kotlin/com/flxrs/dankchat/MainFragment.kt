@@ -611,7 +611,7 @@ class MainFragment : Fragment() {
 
     private fun startVideoPlayer() {
         if(!this::dankPlayer.isInitialized) {
-            dankPlayer = DankPlayer(binding.playerView, context as Context)
+            dankPlayer = DankPlayer(binding.playerView, context as Context, activity as? AppCompatActivity)
             dankPlayer.initPlayer()
         }
         val channel: String = viewModel.activeChannel.value ?: return
@@ -621,7 +621,7 @@ class MainFragment : Fragment() {
                 if (!success!!)
                     showSnackbar(getString(R.string.snackbar_playback_failed, channel))
                 else {
-                    val url: String? = it.urls["480p"]
+                    val url: String? = it.urls["720p"]
                     if (url != null)
                         dankPlayer.play(url, channel)
                 }

@@ -10,6 +10,8 @@ interface DankPlayerViewUI {
     fun removeCloseButtonClickedListener(listener: DankPlayerViewUI.OnCloseButtonClickedListener)
     fun addPlayButtonClickedListener(listener: DankPlayerViewUI.OnPlayClickedListener)
     fun removePlayButtonClickedListener(listener: DankPlayerViewUI.OnPlayClickedListener)
+    fun addSettingsButtonClickedListener(listener: DankPlayerViewUI.OnSettingsButtonClickedListener)
+    fun removeSettingsButtonClickedListener(listener: DankPlayerViewUI.OnSettingsButtonClickedListener)
     interface OnPlayClickedListener {
         fun onPlayClickedListener()
     }
@@ -19,6 +21,10 @@ interface DankPlayerViewUI {
 
     interface OnCloseButtonClickedListener {
         fun onCloseButtonClicked()
+    }
+
+    interface OnSettingsButtonClickedListener {
+        fun onSettingsButtonClicked()
     }
 
 
