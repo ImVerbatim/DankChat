@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.main_fragment.view.*
 
 open class DankPlayerView(context: Context, attrs: AttributeSet?) : PlayerView(context, attrs), DankPlayerViewUI {
     private var bufferingIcon: ProgressBar?
-    private val isFullScreen: Boolean = false
+    private var isFullScreen: Boolean = false
     private var titleView: TextView?
     private var closeButton: ImageButton?
     private var fullScreenButton: ImageButton?
@@ -41,6 +41,7 @@ open class DankPlayerView(context: Context, attrs: AttributeSet?) : PlayerView(c
         this.bufferingIcon = player_view.progress_bar
         fullScreenButton?.setOnClickListener {
             for(x in fullScreenListeners) x.onFullScreenClicked(!isFullScreen)
+            isFullScreen = !isFullScreen
         }
         this.closeButton = player_view.player_close_button
         closeButton?.setOnClickListener {

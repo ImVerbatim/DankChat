@@ -3,6 +3,7 @@ package com.flxrs.dankchat.player
 import android.content.Context
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.flxrs.dankchat.MainFragment
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.Player.EventListener
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
@@ -13,7 +14,14 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 
 
-class DankPlayer(playerView: DankPlayerView, private val context: Context, private val appCompatActivity: AppCompatActivity?) : EventListener, DankPlayerViewUI.OnFullScreenClickedListener, DankPlayerViewUI.OnCloseButtonClickedListener,
+class DankPlayer(
+    playerView: DankPlayerView,
+    private val context: Context,
+    private val appCompatActivity: AppCompatActivity?
+) :
+    EventListener,
+    DankPlayerViewUI.OnFullScreenClickedListener,
+    DankPlayerViewUI.OnCloseButtonClickedListener,
     DankPlayerViewUI.OnPlayClickedListener, DankPlayerViewUI.OnSettingsButtonClickedListener, PlaybackPreparer {
     private var isShowingTrackSelectionDialog: Boolean = false
     private lateinit var trackSelectorParameters: DefaultTrackSelector.Parameters
@@ -90,8 +98,8 @@ class DankPlayer(playerView: DankPlayerView, private val context: Context, priva
 
     override fun onCloseButtonClicked() {
         player.stop()
-        removeAsListeners()
         dankPlayerView.visibility = View.GONE
+        //removeAsListeners()
     }
 
     override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
@@ -131,7 +139,19 @@ class DankPlayer(playerView: DankPlayerView, private val context: Context, priva
         }
     }
 
+    fun addCloseButtonClickedListener(closeButtonClickedListener: DankPlayerViewUI.OnCloseButtonClickedListener) {
+        dankPlayerView.addCloseButtonClickedListener(closeButtonClickedListener)
+    }
+
+    fun addFullScreenClickedListener(fullScreenClickedListener: DankPlayerViewUI.OnFullScreenClickedListener) {
+        dankPlayerView.addFullScreenButtonClickedListener(fullScreenClickedListener)
+    }
+
     override fun preparePlayback() {
         player.prepare()
+    }
+
+    fun isViewActive(): Boolean {
+        return dankPlayerView.visibility == View.VISIBLE
     }
 }

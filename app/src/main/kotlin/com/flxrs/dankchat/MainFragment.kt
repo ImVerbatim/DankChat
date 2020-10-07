@@ -3,6 +3,7 @@ package com.flxrs.dankchat
 import android.Manifest
 import android.app.Activity
 import android.content.*
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
@@ -21,6 +22,8 @@ import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.FileProvider
@@ -45,6 +48,7 @@ import com.flxrs.dankchat.chat.suggestion.SpaceTokenizer
 import com.flxrs.dankchat.chat.suggestion.Suggestion
 import com.flxrs.dankchat.databinding.MainFragmentBinding
 import com.flxrs.dankchat.player.DankPlayer
+import com.flxrs.dankchat.player.DankPlayerViewUI
 import com.flxrs.dankchat.preferences.ChatSettingsFragment
 import com.flxrs.dankchat.preferences.DankChatPreferenceStore
 import com.flxrs.dankchat.service.state.DataLoadingState
@@ -69,7 +73,7 @@ import kotlin.math.max
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), DankPlayerViewUI.OnFullScreenClickedListener, DankPlayerViewUI.OnCloseButtonClickedListener {
 
     private lateinit var dankPlayer: DankPlayer
     private val viewModel: DankChatViewModel by activityViewModels()
@@ -113,6 +117,47 @@ class MainFragment : Fragment() {
             copy.delete()
             showSnackbar(getString(R.string.snackbar_upload_failed))
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if(this::dankPlayer.isInitialized && dankPlayer.isViewActive()) {
+            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
+                goPlayerLandscape()
+            else
+                goPlayerPortrait()
+
+        }
+    }
+
+    private fun goPlayerLandscape() {
+        if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+        binding.appbarLayout.visibility = View.GONE
+        binding.inputLayout.visibility = View.GONE
+        binding.emoteMenuBottomSheet.visibility = View.GONE
+        val params = binding.playerView.layoutParams as ConstraintLayout.LayoutParams
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT
+        params.height = ViewGroup.LayoutParams.MATCH_PARENT
+        binding.playerView.layoutParams = params
+    }
+
+    private fun goPlayerPortrait() {
+        if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+        binding.appbarLayout.visibility = View.VISIBLE
+        binding.inputLayout.visibility = View.VISIBLE
+        binding.emoteMenuBottomSheet.visibility = View.VISIBLE
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(binding.constraintLayout)
+        constraintSet.setDimensionRatio(R.id.player_view, "16:9")
+        constraintSet.applyTo(binding.constraintLayout)
+        val params = binding.playerView.layoutParams as ConstraintLayout.LayoutParams
+        params.width = 0
+        params.height = 0
+        binding.playerView.layoutParams = params
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -612,6 +657,8 @@ class MainFragment : Fragment() {
     private fun startVideoPlayer() {
         if(!this::dankPlayer.isInitialized) {
             dankPlayer = DankPlayer(binding.playerView, context as Context, activity as? AppCompatActivity)
+            dankPlayer.addFullScreenClickedListener(this)
+            dankPlayer.addCloseButtonClickedListener(this)
             dankPlayer.initPlayer()
         }
         val channel: String = viewModel.activeChannel.value ?: return
@@ -957,5 +1004,23 @@ class MainFragment : Fragment() {
         const val LOGOUT_REQUEST_KEY = "logout_key"
         const val LOGIN_REQUEST_KEY = "login_key"
         const val THEME_CHANGED_KEY = "theme_changed_key"
+    }
+
+    override fun onFullScreenClicked(isFullScreen: Boolean) {
+        if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+        else if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+    }
+
+    override fun onCloseButtonClicked() {
+        binding.appbarLayout.visibility = View.VISIBLE
+        binding.inputLayout.visibility = View.VISIBLE
+        binding.emoteMenuBottomSheet.visibility = View.VISIBLE
+        val params = binding.playerView.layoutParams as ConstraintLayout.LayoutParams
+        params.width = 0
+        params.height = 0
+        binding.playerView.layoutParams = params
     }
 }
