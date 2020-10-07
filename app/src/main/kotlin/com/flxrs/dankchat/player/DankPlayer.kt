@@ -158,4 +158,10 @@ class DankPlayer(
     fun stop() {
         player.stop()
     }
+
+    fun destroy() {
+        player.release()
+        removeAsListeners()
+        dankPlayerView.visibility = View.GONE
+    }
 }

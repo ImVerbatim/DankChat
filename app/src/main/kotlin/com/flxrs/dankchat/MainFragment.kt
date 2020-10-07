@@ -321,6 +321,8 @@ class MainFragment : Fragment(), DankPlayerViewUI.OnFullScreenClickedListener, D
         if (::preferences.isInitialized) {
             preferences.unregisterOnSharedPreferenceChangeListener(preferenceListener)
         }
+        if(this::dankPlayer.isInitialized)
+            dankPlayer.destroy()
         super.onDestroy()
     }
 
