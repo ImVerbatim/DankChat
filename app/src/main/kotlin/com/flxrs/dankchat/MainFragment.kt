@@ -130,10 +130,7 @@ class MainFragment : Fragment(), DankPlayerViewUI.OnFullScreenClickedListener, D
         }
     }
 
-    private fun goPlayerLandscape() {
-        if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        }
+    private fun setPlayerLandscapeConstraints() {
         binding.appbarLayout.visibility = View.GONE
         binding.inputLayout.visibility = View.GONE
         binding.emoteMenuBottomSheet.visibility = View.GONE
@@ -143,10 +140,7 @@ class MainFragment : Fragment(), DankPlayerViewUI.OnFullScreenClickedListener, D
         binding.playerView.layoutParams = params
     }
 
-    private fun goPlayerPortrait() {
-        if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        }
+    private fun setPlayerPortraitConstraints() {
         binding.appbarLayout.visibility = View.VISIBLE
         binding.inputLayout.visibility = View.VISIBLE
         binding.emoteMenuBottomSheet.visibility = View.VISIBLE
@@ -158,6 +152,20 @@ class MainFragment : Fragment(), DankPlayerViewUI.OnFullScreenClickedListener, D
         params.width = 0
         params.height = 0
         binding.playerView.layoutParams = params
+    }
+
+    private fun goPlayerLandscape() {
+        if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+        setPlayerLandscapeConstraints()
+    }
+
+    private fun goPlayerPortrait() {
+        if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+        setPlayerPortraitConstraints()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -675,6 +683,16 @@ class MainFragment : Fragment(), DankPlayerViewUI.OnFullScreenClickedListener, D
                     val url: String? = it.urls["720p"]
                     if (url != null)
                         dankPlayer.play(url, channel)
+
+                    if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                        binding.appbarLayout.visibility = View.GONE
+                        binding.inputLayout.visibility = View.GONE
+                        binding.emoteMenuBottomSheet.visibility = View.GONE
+                        val params = binding.playerView.layoutParams as ConstraintLayout.LayoutParams
+                        params.width = ViewGroup.LayoutParams.MATCH_PARENT
+                        params.height = ViewGroup.LayoutParams.MATCH_PARENT
+                        binding.playerView.layoutParams = params
+                    }
                 }
             }
 
@@ -1016,15 +1034,11 @@ class MainFragment : Fragment(), DankPlayerViewUI.OnFullScreenClickedListener, D
         }
         else if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
     }
 
     override fun onCloseButtonClicked() {
-        binding.appbarLayout.visibility = View.VISIBLE
-        binding.inputLayout.visibility = View.VISIBLE
-        binding.emoteMenuBottomSheet.visibility = View.VISIBLE
-        val params = binding.playerView.layoutParams as ConstraintLayout.LayoutParams
-        params.width = 0
-        params.height = 0
-        binding.playerView.layoutParams = params
+        setPlayerPortraitConstraints()
     }
 }
