@@ -154,4 +154,8 @@ class DankPlayer(
     fun isViewActive(): Boolean {
         return dankPlayerView.visibility == View.VISIBLE
     }
+
+    fun stop() {
+        player.stop()
+    }
 }

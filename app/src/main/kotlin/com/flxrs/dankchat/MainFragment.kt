@@ -326,6 +326,8 @@ class MainFragment : Fragment(), DankPlayerViewUI.OnFullScreenClickedListener, D
 
     override fun onPause() {
         binding.input.clearFocus()
+        if(this::dankPlayer.isInitialized)
+            dankPlayer.stop()
         super.onPause()
     }
 
