@@ -3,7 +3,6 @@ package com.flxrs.dankchat.player
 import android.content.Context
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.flxrs.dankchat.MainFragment
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.Player.EventListener
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
@@ -11,7 +10,9 @@ import com.google.android.exoplayer2.source.MediaSourceFactory
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.ui.DebugTextViewHelper
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import kotlinx.android.synthetic.main.device_player_view.view.*
 
 
 class DankPlayer(
@@ -24,6 +25,7 @@ class DankPlayer(
     DankPlayerViewUI.OnCloseButtonClickedListener,
     DankPlayerViewUI.OnPlayClickedListener, DankPlayerViewUI.OnSettingsButtonClickedListener, PlaybackPreparer {
     private var isShowingTrackSelectionDialog: Boolean = false
+    private lateinit var debugViewHelper: DebugTextViewHelper
     private lateinit var trackSelectorParameters: DefaultTrackSelector.Parameters
     private lateinit var trackSelector: DefaultTrackSelector
     private lateinit var lastSeenTrackGroupArray: TrackGroupArray
@@ -34,6 +36,7 @@ class DankPlayer(
     private lateinit var dataSourceFactory: DefaultDataSourceFactory
     private lateinit var player: SimpleExoPlayer
     private val dankPlayerView: DankPlayerView = playerView
+    private var isDebugMode: Boolean = false
 
     init {
         initPlayer()
@@ -57,6 +60,21 @@ class DankPlayer(
         player.prepare()
         dankPlayerView.player = player
 
+        dankPlayerView.dank_image.setOnClickListener {
+            showDebugMode(!isDebugMode)
+            isDebugMode = !isDebugMode
+        }
+
+    }
+
+    private fun showDebugMode(isDebug: Boolean) {
+        if(isDebug) {
+            dankPlayerView.showDebugView(true)
+            debugViewHelper = DebugTextViewHelper(player, dankPlayerView.getDebugView())
+            debugViewHelper.start()
+        }
+        else
+            dankPlayerView.showDebugView(false)
     }
 
     private fun updateTrackSelectorParameters() {

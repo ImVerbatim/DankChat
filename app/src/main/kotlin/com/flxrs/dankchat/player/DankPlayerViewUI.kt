@@ -26,6 +26,4 @@ interface DankPlayerViewUI {
     interface OnSettingsButtonClickedListener {
         fun onSettingsButtonClicked()
     }
-
-
 }
